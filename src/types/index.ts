@@ -1,4 +1,4 @@
-// Типы и интерфейсы данных
+// Типы
 
 // Способы оплаты
 export type TUserPayment = 'card' | 'cash' | '';
@@ -13,6 +13,16 @@ export interface ICard {
 	description: string;
 }
 
+// Данные покупателя
+export interface IUser {
+	payment: TUserPayment
+	address: string;
+	email: string;
+	phone: string;
+}
+
+// Интерфейсы слоя данных
+
 // Интерфейс класса данных каталога карточек
 export interface ICardsData {
 	cards: ICard[];
@@ -21,14 +31,6 @@ export interface ICardsData {
 	saveCards (cards: ICard[]): void;
 	savePreview (cards: ICard[]): void;
 	getCard(id: string): ICard[];
-}
-
-// Данные покупателя
-export interface IUser {
-	payment: TUserPayment
-	address: string;
-	email: string;
-	phone: string;
 }
 
 // Интерфейс класса данных покупателя
@@ -51,4 +53,6 @@ export interface IBasketData {
 	GetCards (): ICard[];
 	IsInBasket (id: string): boolean;
 }
+
+// Интерфейсы слоя представления
 
