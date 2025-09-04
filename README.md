@@ -195,15 +195,18 @@ IsInBasket (id: string): boolean;
 
 **Поля класса:**
 - busketButton: HTMLButtonElement
-- basketCounterElement: HTMLElement
+- basketCounterEl: HTMLElement
 
 **Методы класса:**
 - set counter (cardsCount: number): void;
 
 ### Класс CatalogView
-Класс для управления каталогом товаров.\
+Класс для управления отображением каталога товаров.\
 Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.\
 Содержит метод для отрисовки каталога карточек товаров.
+
+**Поля класса:**
+- catalogEl: HTMLElement;
 
 **Методы класса:**
 - set content (cards: HTMLElement[]): void;
@@ -228,63 +231,64 @@ IsInBasket (id: string): boolean;
 Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
 
 **Поля класса:**
-- totalPriceElement: HTMLElement;
+- totalPriceEl: HTMLElement;
 - submitButton: HTMLButtonElement;
 
 **Методы класса:**
 - set submitButtonText (text: string): void;
 - set totalPrice (totalPrice: number): void;
 
-### Класс CardView
+### Класс CardBaseView
 Родительский класс для всех классов отображения карточки товара.\
-Содержит в себе функционал, который будут наследовать дочерние классы представления карточки товара.\
+Содержит в себе функционал, который будут наследовать все дочерние классы представления карточки товара.\
 Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.\
 Содержит DOM элементы с названием и ценой товара и методы для установки текстового содержимого этих элементов.
 
 **Поля класса:**
-- title: string;
-- price: number;
+- cardTitleEl: HTMLElement;
+- cardPriceEl: HTMLElement;
 
 **Методы класса:**
 - set title (text: string): void;
 - set price (price: number): void;
 
-### Класс CardInCatalogView
-Потомок класса `CardView`. Служит для отображения карточки товара в каталоге.\
-Содержит свойства и методы родительского класса, а также категорию товара, ссылку на картинку и методы для установки их значений.\
+### Класс CardFullView
+Родительский класс для классов карточки в каталоге и карточки в корзине.
+Содержит DOM элемент с названием категории и ссылку на картинку карточки товара, а также методы для установки текстового содержимого категории и ссылки на картинку.\
 Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
 
 **Поля класса:**
-- category: string;
-- image: string;
-
-**Методы класса:**
-- set category (category: string): void;
-- set image (image: string): void;
-
-### Класс CardPreviewView
-Потомок класса `CardView`. Служит для отображения карточки товара в каталоге.\
-Содержит свойства и методы родительского класса, а также категорию товара, ссылку на картинку, описание, кнопку добавления товара в корзину и методы для установки их значений.\
-Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
-
-**Поля класса:**
-- category: string;
-- image: string;
-- description: string;
-- buttonBuy: HTMLButtonElement;
+- cardCategoryEl: HTMLElement;
+- cardImageLink: string;
 
 **Методы класса:**
 - set category (text: string): void;
 - set image (link: string): void;
+
+### Класс CardInCatalogView
+Потомок классов `CardBaseView` и `CardFullView`. Служит для отображения карточки товара в каталоге.\
+Содержит свойства и методы родительских классов.\
+Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
+
+### Класс CardPreviewView
+Потомок классов `CardBaseView` и `CardFullView`. Служит для отображения карточки товара в каталоге.\
+Содержит свойства и методы родительского класса, а также описание, кнопку добавления товара в корзину и метод для установки текста описания.\
+Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
+
+**Поля класса:**
+- cardDescriptionEl: HTMLElement;
+- buyButton: HTMLButtonElement;
+
+**Методы класса:**
 - set description (text: string): void;
 
 ### Класс CardInBasketView
-Потомок класса `CardView`. Служит для отображения карточки товара в каталоге.\
+Потомок класса `CardBaseView`. Служит для отображения карточки товара в каталоге.\
 Содержит свойства и методы родительского класса, а также порядковый номер товара в корзине, кнопку удаления товара из корзины, метод установки порядкового номера товара в корзине.\
 Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
 
 **Поля класса:**
-- index: HTMLElement;
+- cardIndexEl: HTMLElement;
 - deleteButton: HTMLButtonElement;
 
 **Методы класса:**
@@ -314,7 +318,7 @@ IsInBasket (id: string): boolean;
 **Поля класса:**
 - cardPaymentButton: HTMLButtonElement;
 - cashPaymentButton: HTMLButtonElement;
-- addressInput: HTMLInputElement;
+- addressInputEl: HTMLInputElement;
 
 **Методы класса:**
 - set address (text: string): void;
@@ -324,8 +328,8 @@ IsInBasket (id: string): boolean;
 Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
 
 **Поля класса:**
-- emailInput: HTMLInputElement;
-- phoneInput: HTMLInputElement;
+- emailInputEl: HTMLInputElement;
+- phoneInputEl: HTMLInputElement;
 
 **Методы класса:**
 - set email (text: string): void;
@@ -337,7 +341,7 @@ IsInBasket (id: string): boolean;
 Конструктор класса принимает `container` - контейнер с разметкой, в котором будет происходить поиск DOM элементов.
 
 **Поля класса:**
-- totalPriceElement: HTMLElement;
+- totalPriceEl: HTMLElement;
 - succesCloseButton: HTMLButtonElement;
 
 **Методы класса:**
