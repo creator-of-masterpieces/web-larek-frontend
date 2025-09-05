@@ -94,9 +94,9 @@ payment: TUserPayment
 address: string;
 email: string;
 phone: string;
-GetUserinfo (): IUser;
-ValidateUser (userData: IUser): boolean;
-SaveUser (userData: IUser): void;
+getUserinfo (): IUser;
+validateUser (): boolean;
+saveUser (userData: IUser): void;
 }
 ```
 
@@ -105,11 +105,11 @@ SaveUser (userData: IUser): void;
 ```TypeScript
 export interface IBasketData {
 Cards: ICard[];
-AddCard (card: ICard[]): void;
-RemoveCard (id: string): void;
-GetTotalPrice(cards: ICard[]): number;
-GetCards (): ICard[];
-IsInBasket (id: string): boolean;
+addCard (card: ICard[]): void;
+removeCard (id: string): void;
+getTotalPrice(cards: ICard[]): number;
+getCards (): ICard[];
+isInBasket (id: string): boolean;
 }
 ```
 
@@ -148,10 +148,10 @@ IsInBasket (id: string): boolean;
 
 Так же класс предоставляет набор методов для взаимодействия с этими данными
 
-`getCards ():ICard[]` - возвращает массив карточек;
-`saveCards (cards: ICard[]): void` - сохраняет массив карточек;
-`savePreview (cards: ICard[]): void` - принимает и сохраняет инстанс карточки;
-`getCard(id: string): ICard[]` - возвращает карточку по её id;
+- `getCards ():ICard[]` - возвращает массив карточек;
+- `saveCards (cards: ICard[]): void` - сохраняет массив карточек;
+- `savePreview (cards: ICard[]): void` - принимает и сохраняет инстанс карточки;
+- `getCard(id: string): ICard[]` - возвращает карточку по её id;
 
 #### Класс UserData
 Класс отвечает за хранение и валидацию данных текущего пользователя.\
@@ -163,22 +163,22 @@ IsInBasket (id: string): boolean;
 - `phone: string` - номер телефона;
 
 Так же класс предоставляет набор методов для взаимодействия с этими данными:
-- `GetUserinfo (): IUser` - возвращает основные данные пользователя;
-- `ValidateUser (userData: IUser): boolean` - валидирует данные пользователя;
-- `SaveUser (userData: IUser): void` - сохраняет данные пользователя;
+- `getUserinfo (): IUser` - возвращает основные данные пользователя;
+- `validateUser (): boolean` - валидирует данные пользователя;
+- `saveUser (userData: Partial<IUser>): void` - Принимает объект типа IUser, в котором все поля опциональные. Сохраняет данные пользователя;
 
 #### Класс BasketData
 Класс отвечает за хранение и обработку данных о товарах в корзине.\
 Конструктор класса принимает инстант брокера событий.\
 В полях класса хранятся следующие данные:
-- `Cards: ICard[]` - массив товаров;
+- `cards: ICard[]` - массив товаров;
 
 Так же класс предоставляет набор методов для взаимодействия с этими данными:
-- `AddCard (card: ICard[]): void` - добавляет товар в корзину;
-- `RemoveCard (id: string): void` - удаляет товар из корзины;
-- `GetTotalPrice(cards: ICard[]): number` - возвращает сумму товаров в корзине;
-- `GetCards (): ICard[]` - возвращает массив товаров, добавленных в корзину;
-- `IsInBasket (id: string): boolean` - проверяет наличие товара в корзине по id товара;
+- `addCard (card: ICard[]): void` - добавляет товар в корзину;
+- `removeCard (id: string): void` - удаляет товар из корзины;
+- `getTotalPrice(cards: ICard[]): number` - возвращает сумму товаров в корзине;
+- `getCards (): ICard[]` - возвращает массив товаров, добавленных в корзину;
+- `isInBasket (id: string): boolean` - проверяет наличие товара в корзине по id товара;
 - 
 ### Слой представления
 Все классы представления отвечают за отображение внутри контейнера (DOM-элемент) передаваемых в них данных.
@@ -235,6 +235,7 @@ IsInBasket (id: string): boolean;
 - submitButton: HTMLButtonElement;
 
 **Методы класса:**
+- set content (cards: HTMLElement[]): void;
 - set submitButtonText (text: string): void;
 - set totalPrice (totalPrice: number): void;
 
@@ -346,3 +347,44 @@ IsInBasket (id: string): boolean;
 
 **Методы класса:**
 - set totalPrice (totalPrice: number): void;
+
+### Слой коммуникации
+
+#### Класс AppApi
+Класс предоставляет методы для работы с сервером веб приложения. В конструкторе\
+принимает экземпляр базового класса `Api`.
+
+**В полях класса хранятся следующие данные:**
+- `baseApi` - экземпляр базового класса `Api`.
+
+**Методы класса:**
+- `getProducts(): Promise<IProduct[]>` - получить с сервера массив товаров;
+- `sendOrder(data: IOrderData): Promise<ISuccessOrder>` - отправить на сервер сформированный заказ.
+
+### Слой взаимодействия (презентер)
+Взаимодействие слоев данных и представления происходит при помощи кода, который\
+описан в корневом файле `index.ts`, выполняющий роль презентера. Такое взаимодействие\
+осуществляется использованием брокера событий, который позволяет генерировать\,
+а так же устанавливать на такие события обработчики, запускающие нужный код.\
+В файле `index.ts` сначала создаются необходимые экземпляры классов, а затем\
+устанавливаются обработчики событий.
+
+**События слоя данных, которые могут генерироваться в веб приложении:**
+- `products:saved` - сохранение массива продуктов в слой данных;
+- `basket:changed` - изменение массива корзины товаров;
+
+**События слоя представления, которые могут генерироваться в веб приложении:**
+- `modal:open` - модальное окно открывается;
+- `modal:close` - модальное окно закрывается;
+- `product:open` - открывается модальное окно с превью продукта;
+- `product:buy` - нажата кнопка "Купить" в окне превью;
+- `basket:open` - открывается модальное окно корзины товаров;
+- `basket:delete` - нажата кнопка удаления товара в корзине;
+- `basket:order` - нажата кнопка "Оформить" в корзине товаров;
+- `formOrder:submit` - сохранение данных о пользователе в форме с адресом доставки;
+- `formContacs:submit` - сохранение данных о пользователе в форме с почтой и телефоном.
+- `formOrder:input` - изменение данных в форме заказа с адресом доставки;
+- `formContacs:input` - изменение данных в форме с почтой и телефоном;
+- `formOrder:onile` - выбрана онлайн оплата;
+- `formOrder:cash` - выбрана оплата при получении;
+- `'success:pressed'` - нажата кнопка завершения заказа.
