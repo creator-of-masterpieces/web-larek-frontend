@@ -1,7 +1,10 @@
-// Типы
+	// Типы данных
 
 // Способы оплаты
 export type TUserPayment = 'card' | 'cash' | '';
+
+// Типы запросов к серверу
+export type ApiPostMethods = 'POST' | 'GET';
 
 // Карточка
 export interface ICard {
@@ -21,14 +24,11 @@ export interface IUser {
 	phone: string;
 }
 
-// Интерфейсы слоя данных
+	// Интерфейсы слоя данных
 
 // Интерфейс класса данных каталога карточек
 export interface ICardsData {
-	cards: ICard[];
-	preview: ICard;
-	getCards ():ICard[];
-	saveCards (cards: ICard[]): void;
+	setCards (cards: ICard[]): void;
 	savePreview (cards: ICard[]): void;
 	getCard(id: string): ICard[];
 }
@@ -54,7 +54,7 @@ export interface IBasketData {
 	IsInBasket (id: string): boolean;
 }
 
-// Интерфейсы слоя представления
+	// Интерфейсы слоя представления
 
 // Базовый интерфейс карточки товара
 export interface ICardBaseView {
@@ -83,7 +83,7 @@ export interface ICardPreviewView extends ICardBaseView, ICardFullView {
 }
 
 // Интерфейс карточки товара, добавленной в корзину
-export interface ICardInBasketView extends ICardBaseView{
+export interface ICardInBasketView extends ICardBaseView {
 	cardIndexEl: HTMLElement;
 	deleteButton: HTMLButtonElement;
 	set cardIndex(index: number);
@@ -91,7 +91,7 @@ export interface ICardInBasketView extends ICardBaseView{
 
 // Интерфейс иконки корзины в шапке приложения
 export interface IHeaderView {
-	busketButton: HTMLButtonElement
+	basketButton: HTMLButtonElement
 	basketCounterEl: HTMLElement
 	set counter (cardsCount: number);
 }
@@ -147,8 +147,17 @@ export interface IContactsFormView extends IFormView {
 }
 
 // Интерфейс окна с подтверждением оформления заказа
-export interface IOrderSuccesView {
+export interface IOrderSuccessView {
 	totalPriceEl: HTMLElement;
-	succesCloseButton: HTMLButtonElement;
+	successCloseButton: HTMLButtonElement;
 	set totalPrice (totalPrice: number);
+}
+
+	// Интерфейсы слоя коммуникации
+
+// Интерфейс класса для обращения к серверу
+export interface IApi {
+	baseUrl: string;
+	get<T>(uri: string): Promise<T>;
+	post<T>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }

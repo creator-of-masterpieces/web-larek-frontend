@@ -65,10 +65,7 @@ description: string;
 
 ```TypeScript
 export interface ICardsData {
-cards: ICard[];
-preview: string | null;
-events: IEvents;
-getCards ():ICard[];
+setCards ():ICard[];
 saveCards (cards: ICard[]): void;
 savePreview (cards: ICard[]): void;
 getCard(id: string): ICard[];
@@ -370,7 +367,7 @@ isInBasket (id: string): boolean;
 устанавливаются обработчики событий.
 
 **События слоя данных, которые могут генерироваться в веб приложении:**
-- `products:saved` - сохранение массива продуктов в слой данных;
+- `cards:saved` - сохранение массива продуктов в слой данных;
 - `basket:changed` - изменение массива корзины товаров;
 
 **События слоя представления, которые могут генерироваться в веб приложении:**
@@ -382,9 +379,9 @@ isInBasket (id: string): boolean;
 - `basket:delete` - нажата кнопка удаления товара в корзине;
 - `basket:order` - нажата кнопка "Оформить" в корзине товаров;
 - `formOrder:submit` - сохранение данных о пользователе в форме с адресом доставки;
-- `formContacs:submit` - сохранение данных о пользователе в форме с почтой и телефоном.
+- `formContacts:submit` - сохранение данных о пользователе в форме с почтой и телефоном.
 - `formOrder:input` - изменение данных в форме заказа с адресом доставки;
-- `formContacs:input` - изменение данных в форме с почтой и телефоном;
+- `formContacts:input` - изменение данных в форме с почтой и телефоном;
 - `formOrder:onile` - выбрана онлайн оплата;
 - `formOrder:cash` - выбрана оплата при получении;
-- `'success:pressed'` - нажата кнопка завершения заказа.
+- `orderSuccesMessage:successConfirm` - нажата кнопка завершения заказа.
