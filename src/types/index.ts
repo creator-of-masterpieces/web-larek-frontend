@@ -6,7 +6,7 @@ export type TUserPayment = 'card' | 'cash' | '';
 // Типы запросов к серверу
 export type ApiPostMethods = 'POST' | 'GET';
 
-// Карточка
+// Интерфейс карточки
 export interface ICard {
 	id: string;
 	title: string;
@@ -15,6 +15,7 @@ export interface ICard {
 	price: number | null;
 	description: string;
 }
+
 
 // Данные покупателя
 export interface IUser {
@@ -58,22 +59,15 @@ export interface IBasketData {
 
 // Базовый интерфейс карточки товара
 export interface ICardBaseView {
-	cardTitleEl: HTMLElement;
-	cardPriceEl: HTMLElement;
 	set title (text: string);
 	set price (price: number);
 }
 
 // Расширенный интерфейс карточки товара
 export interface ICardFullView {
-	cardCategoryEl: HTMLElement;
-	cardImageLink: string;
 	set category (text: string);
 	set image (link: string);
 }
-
-// Интерфейс карточки товара в каталоге
-export interface ICardInCatalogView  extends ICardBaseView, ICardFullView{}
 
 // Интерфейс выбранной карточки товара
 export interface ICardPreviewView extends ICardBaseView, ICardFullView {
@@ -89,7 +83,7 @@ export interface ICardInBasketView extends ICardBaseView {
 	set cardIndex(index: number);
 }
 
-// Интерфейс иконки корзины в шапке приложения
+// Интерфейс шапки приложения, который управляет иконкой корзины
 export interface IHeaderView {
 	basketButton: HTMLButtonElement
 	basketCounterEl: HTMLElement
@@ -98,7 +92,6 @@ export interface IHeaderView {
 
 // Интерфейс каталога карточек на главной странице
 export interface ICatalogView {
-	catalogEl: HTMLElement;
 	set content (cards: HTMLElement[]);
 }
 
