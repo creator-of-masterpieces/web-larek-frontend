@@ -1,18 +1,18 @@
 import { IEvents } from '../../core/EventEmitter';
 import { cloneTemplate } from '../../../utils/utils';
 import { Component } from '../shared/Component';
-import { ICard } from '../../../types';
+import { ICard, ICatalogView } from '../../../types';
 
-export class CatalogView extends Component<ICard>{
-	protected cards: HTMLElement[];
+export class CatalogView extends Component<ICatalogView> implements ICatalogView {
+	protected catalog: HTMLElement[];
 	protected events: IEvents;
 
-	constructor(template: HTMLTemplateElement, events: IEvents) {
-		super(template);
+	constructor(container: HTMLElement, events: IEvents) {
+		super(container);
 		this.events = events;
 	}
 
 	set content(cards: HTMLElement[]) {
-		
+		this.container.replaceChildren(...cards);
 	}
 }

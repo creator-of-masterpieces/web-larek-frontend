@@ -1,5 +1,4 @@
-import { ICardBaseView, ICardFullView } from '../../../types';
-import { Component } from '../shared/Component';
+import { ICardFullView } from '../../../types';
 import {CardBaseView} from "./CardBaseView";
 
 // Класс содержит базовые свойства для классов карточек в галерее и превью

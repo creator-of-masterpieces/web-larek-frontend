@@ -7,10 +7,10 @@ export type TUserPayment = 'card' | 'cash' | '';
 export type ApiPostMethods = 'POST' | 'GET';
 
 // Типы данных карточки, которые передаются в render
-export type CardBaseProps  = { title: string; price: number };
+export type CardBaseProps  = { title: string; price: number | null };
 export type CardMediaProps = { category?: string; image?: string };
-export type CardCatalogProps = CardBaseProps & CardMediaProps;
-
+export type CardsArrayProps ={ items: ICard[]};
+export type CardProps = CardBaseProps & CardMediaProps;
 
 // Интерфейс карточки
 export interface ICard {
@@ -21,7 +21,6 @@ export interface ICard {
 	price: number | null;
 	description: string;
 }
-
 
 // Данные покупателя
 export interface IUser {
@@ -36,8 +35,8 @@ export interface IUser {
 // Интерфейс класса данных каталога карточек
 export interface ICardsData {
 	setCards (cards: ICard[]): void;
-	savePreview (cards: ICard[]): void;
-	getCard(id: string): ICard[];
+	// savePreview (cards: ICard[]): void;
+	getCards(): ICard[];
 }
 
 // Интерфейс класса данных покупателя

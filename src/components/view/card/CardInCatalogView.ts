@@ -1,6 +1,4 @@
-import { Component } from '../shared/Component';
-import { ICardBaseView, ICardFullView} from '../../../types';
-import { CardBaseView } from './CardBaseView';
+import { CardsArrayProps, ICardBaseView, ICardFullView } from '../../../types';
 import { CardFullView } from './CardFullView';
 
 // Интерфейс карточки товара в каталоге

@@ -2,7 +2,7 @@ import { ICard, ICardsData } from '../../types';
 import { IEvents } from '../core/EventEmitter';
 import { AppEvents } from '../../utils/constants';
 
-export class CardsData {
+export class CardsData implements ICardsData{
 	protected cards: ICard[];
 	protected preview: ICard;
 	protected events: IEvents;
@@ -16,6 +16,7 @@ export class CardsData {
 		this.cards = cards;
 		this.events.emit(AppEvents.CardsSaved);
 	}
+
 	getCards() {
 		return this.cards;
 	}
