@@ -1,17 +1,25 @@
+// Утилитарные функции для использования в проекте. Я буду использовать функции ensureElement, ensureAllElements, cloneTemplate.
+
+// Переводит PascalCase или camelCase в kebab-case. Пример: "CardView" → "card-view".
 export function pascalToKebab(value: string): string {
     return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
+// Type guard. Проверяет, является ли аргумент строкой-селектором.
 export function isSelector(x: any): x is string {
     return (typeof x === "string") && x.length > 1;
 }
 
+// Проверяет, является ли значение null или undefined. Если да возвращает true, иначе false.
 export function isEmpty(value: any): boolean {
     return value === null || value === undefined;
 }
 
 export type SelectorCollection<T> = string | NodeListOf<Element> | T[];
 
+// Функция для поиска списка DOM элементов в разметке.\
+// Может принимать строку-селектор ('.card'), NodeList (результат querySelectorAll), массив элементов ([el1, el2]).\
+// Возвращает массив HTML элементов.
 export function ensureAllElements<T extends HTMLElement>(selectorElement: SelectorCollection<T>, context: HTMLElement = document as unknown as HTMLElement): T[] {
     if (isSelector(selectorElement)) {
         return Array.from(context.querySelectorAll(selectorElement)) as T[];
@@ -27,6 +35,9 @@ export function ensureAllElements<T extends HTMLElement>(selectorElement: Select
 
 export type SelectorElement<T> = T | string;
 
+// Функция для поиска DOM элемента в разметке.\
+// Может принимать строку-селектор ('#app'), готовый HTMLElement.\
+// Возвращает HTMLElement.
 export function ensureElement<T extends HTMLElement>(selectorElement: SelectorElement<T>, context?: HTMLElement): T {
     if (isSelector(selectorElement)) {
         const elements = ensureAllElements<T>(selectorElement, context);
@@ -44,11 +55,13 @@ export function ensureElement<T extends HTMLElement>(selectorElement: SelectorEl
     throw new Error('Unknown selector element');
 }
 
+// Клонирует содержимое <template>.
 export function cloneTemplate<T extends HTMLElement>(query: string | HTMLTemplateElement): T {
     const template = ensureElement(query) as HTMLTemplateElement;
     return template.content.firstElementChild.cloneNode(true) as T;
 }
 
+// Генератор имени класса по БЭМ.
 export function bem(block: string, element?: string, modifier?: string): { name: string, class: string } {
     let name = block;
     if (element) name += `__${element}`;
@@ -59,6 +72,7 @@ export function bem(block: string, element?: string, modifier?: string): { name:
     };
 }
 
+// Утилита для получения списка свойств/методов прототипа объекта с возможностью фильтрации.
 export function getObjectProperties(obj: object, filter?: (name: string, prop: PropertyDescriptor) => boolean): string[] {
     return Object.entries(
         Object.getOwnPropertyDescriptors(
@@ -79,7 +93,9 @@ export function setElementData<T extends Record<string, unknown> | object>(el: H
 }
 
 /**
- * Получает типизированные данные из dataset атрибутов элемента
+ * Принимает объект со строковыми значениями, схему преобразования объекта.\
+ * Преобразует его по переданной схеме в объект с другими типами значений, например с числовыми.
+ * Возвращает преобразованный объект
  */
 export function getElementData<T extends Record<string, unknown>>(el: HTMLElement, scheme: Record<string, Function>): T {
     const data: Partial<T> = {};
@@ -90,7 +106,11 @@ export function getElementData<T extends Record<string, unknown>>(el: HTMLElemen
 }
 
 /**
- * Проверка на простой объект
+ * Проверяет, является ли объект «простым», то есть:
+ *
+ * создан {} или Object.create(null);
+ *
+ * а не массив, не DOM-элемент, не экземпляр класса.
  */
 export function isPlainObject(obj: unknown): obj is object {
     const prototype = Object.getPrototypeOf(obj);
@@ -98,6 +118,7 @@ export function isPlainObject(obj: unknown): obj is object {
         prototype === null;
 }
 
+// Type guard. Проверяет, является ли тип переданного значения булевым.
 export function isBoolean(v: unknown): v is boolean {
     return typeof v === 'boolean';
 }

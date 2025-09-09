@@ -6,17 +6,9 @@ import { CardFullView } from './CardFullView';
 // Интерфейс карточки товара в каталоге
 export interface ICardInCatalogView  extends ICardBaseView, ICardFullView{}
 
-export class CardInCatalogView extends CardBaseView implements ICardInCatalogView {
-	private fullView: ICardFullView;
+export class CardInCatalogView extends CardFullView implements ICardInCatalogView {
 
-	constructor(container: HTMLTemplateElement) {
+	constructor(container: HTMLElement) {
 		super(container);
-		this.fullView = new CardFullView(container);
 	}
-	set category (text: string) {
-		this.fullView.category = text;
-	};
-	set image (link: string) {
-		this.fullView.image = link;
-	};
 }

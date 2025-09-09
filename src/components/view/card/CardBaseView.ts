@@ -1,11 +1,11 @@
 import { Component } from '../shared/Component';
-import { ICardBaseView } from '../../../types';
+import {CardCatalogProps, ICardBaseView} from '../../../types';
 
 // Класс содержит базовые свойства для всех классов карточек
-export class CardBaseView extends Component<ICardBaseView> {
+export class CardBaseView extends Component<CardCatalogProps> {
 	protected cardTitleEl: HTMLElement;
 	protected cardPriceEl: HTMLElement;
-	constructor(container: HTMLTemplateElement) {
+	constructor(container: HTMLElement) {
 		super(container);
 		this.cardTitleEl = this.container.querySelector('.card__title');
 		this.cardPriceEl = this.container.querySelector('.card__price');
@@ -16,6 +16,6 @@ export class CardBaseView extends Component<ICardBaseView> {
 	};
 
 	set price (price: number) {
-		this.cardPriceEl.textContent = String(price);
+		this.cardPriceEl.textContent = price.toString();
 	};
 }

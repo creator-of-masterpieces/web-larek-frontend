@@ -6,6 +6,12 @@ export type TUserPayment = 'card' | 'cash' | '';
 // Типы запросов к серверу
 export type ApiPostMethods = 'POST' | 'GET';
 
+// Типы данных карточки, которые передаются в render
+export type CardBaseProps  = { title: string; price: number };
+export type CardMediaProps = { category?: string; image?: string };
+export type CardCatalogProps = CardBaseProps & CardMediaProps;
+
+
 // Интерфейс карточки
 export interface ICard {
 	id: string;
@@ -64,7 +70,7 @@ export interface ICardBaseView {
 }
 
 // Расширенный интерфейс карточки товара
-export interface ICardFullView {
+export interface ICardFullView extends ICardBaseView {
 	set category (text: string);
 	set image (link: string);
 }
