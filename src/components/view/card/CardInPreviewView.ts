@@ -14,6 +14,7 @@ export class CardInPreviewView extends CardFullView implements ICardPreviewView 
 	constructor(container: HTMLElement, events: IEvents) {
 		super(container, events);
 		this.cardDescriptionElement = container.querySelector('.card__text');
+		this.buyButton = container.querySelector('.card__button');
 	}
 
 	set description(text: string) {

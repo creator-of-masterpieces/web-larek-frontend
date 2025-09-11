@@ -9,10 +9,12 @@ import { cloneTemplate, ensureElement } from './utils/utils';
 import { CardInCatalogView } from './components/view/card/CardInCatalogView';
 import { CatalogView } from './components/view/catalog/CatalogView';
 import { ModalView } from './components/view/modal/ModalView';
+import { CardInPreviewView } from './components/view/card/CardInPreviewView';
 
 // Элементы разметки
-const cardElement = ensureElement<HTMLTemplateElement>('#card-catalog');
 const catalogElement = ensureElement<HTMLElement>('.gallery');
+const catalogCardElement = ensureElement<HTMLTemplateElement>('#card-catalog');
+const previewCardElement = ensureElement<HTMLTemplateElement>('#card-preview');
 const modalElement = ensureElement<HTMLElement>('.modal');
 
 // Прочие классы
@@ -39,7 +41,7 @@ api.getCards()
 // Создает элементы карточек, заполняет данными из класса данных.
 events.on(AppEvents.CardsSaved, () => {
 	const cards = catalogData.getCards().map((item) => {
-		const cardClonedElement = cloneTemplate<HTMLElement>(cardElement);
+		const cardClonedElement = cloneTemplate<HTMLElement>(catalogCardElement);
 		const cardView = new CardInCatalogView(cardClonedElement, events);
 		return cardView.render(item);
 	});
@@ -49,12 +51,20 @@ events.on(AppEvents.CardsSaved, () => {
 
 // Пытаюсь вывести выбранную карточку в модалку.
 events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
-	const cardClonedElement = cloneTemplate<HTMLElement>(cardElement);
-	const cardView = new CardInCatalogView(cardClonedElement, events);
-	modalView.content = cardView.render(cardView);
+	// Вывод реальной карточки
+	const previewCardClonedElement = cloneTemplate<HTMLElement>(previewCardElement);
+	const previewCardView = new CardInPreviewView(previewCardClonedElement, events);
+	const previewCardFilled =  previewCardView.render(catalogData.getCard(id.cardId));
+	modalView.content = previewCardFilled;
 	modalView.openModal();
-	console.log(id.cardId);
-	console.log(catalogData.getCard(id.cardId));
+
+	// тестирую модалку
+	// const cardClonedElement = cloneTemplate<HTMLElement>(catalogCardElement);
+	// const cardView = new CardInCatalogView(cardClonedElement, events);
+	// modalView.content = cardView.render(cardView);
+	// modalView.openModal();
+	// console.log(id.cardId);
+	// console.log(catalogData.getCard(id.cardId));
 })
 
 
