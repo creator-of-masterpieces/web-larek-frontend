@@ -4,7 +4,6 @@ import { Component } from '../shared/Component';
 import { ICard, ICatalogView } from '../../../types';
 
 export class CatalogView extends Component<ICatalogView> implements ICatalogView {
-	protected catalog: HTMLElement[];
 	protected events: IEvents;
 
 	constructor(container: HTMLElement, events: IEvents) {

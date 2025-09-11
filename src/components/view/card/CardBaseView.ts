@@ -1,26 +1,34 @@
 import { Component } from '../shared/Component';
 import { CardProps, ICardBaseView } from '../../../types';
+import { IEvents } from '../../core/EventEmitter';
 
 // Класс содержит базовые свойства для всех классов карточек
 export class CardBaseView extends Component<CardProps> implements ICardBaseView {
-	protected cardTitleEl: HTMLElement;
-	protected cardPriceEl: HTMLElement;
-	constructor(container: HTMLElement) {
+	protected cardTitleElement: HTMLElement;
+	protected cardPriceElement: HTMLElement;
+	protected cardId: string;
+	protected events: IEvents;
+	constructor(container: HTMLElement, events: IEvents) {
 		super(container);
-		this.cardTitleEl = this.container.querySelector('.card__title');
-		this.cardPriceEl = this.container.querySelector('.card__price');
+		this.events = events;
+		this.cardTitleElement = this.container.querySelector('.card__title');
+		this.cardPriceElement = this.container.querySelector('.card__price');
 	}
 	
 	set title (text: string) {
-		this.cardTitleEl.textContent = text;
+		this.cardTitleElement.textContent = text;
 	};
 
 	set price (price: number) {
 		if(price){
-			this.cardPriceEl.textContent = price.toString();
+			this.cardPriceElement.textContent = price.toString();
 		}
 		else {
-			this.cardPriceEl.textContent = '';
+			this.cardPriceElement.textContent = 'Бесценно';
 		}
 	};
+
+	set id (id: string) {
+		this.cardId = id;
+	}
 }

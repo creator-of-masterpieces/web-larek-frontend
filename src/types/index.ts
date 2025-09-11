@@ -66,6 +66,7 @@ export interface IBasketData {
 export interface ICardBaseView {
 	set title (text: string);
 	set price (price: number);
+	set id (id: string);
 }
 
 // Расширенный интерфейс карточки товара
@@ -74,16 +75,10 @@ export interface ICardFullView extends ICardBaseView {
 	set image (link: string);
 }
 
-// Интерфейс выбранной карточки товара
-export interface ICardPreviewView extends ICardBaseView, ICardFullView {
-	cardDescriptionEl: HTMLElement;
-	buyButton: HTMLButtonElement;
-	set description (text: string);
-}
 
 // Интерфейс карточки товара, добавленной в корзину
 export interface ICardInBasketView extends ICardBaseView {
-	cardIndexEl: HTMLElement;
+	cardIndexElement: HTMLElement;
 	deleteButton: HTMLButtonElement;
 	set cardIndex(index: number);
 }
@@ -91,7 +86,7 @@ export interface ICardInBasketView extends ICardBaseView {
 // Интерфейс шапки приложения, который управляет иконкой корзины
 export interface IHeaderView {
 	basketButton: HTMLButtonElement
-	basketCounterEl: HTMLElement
+	basketCounterElement: HTMLElement
 	set counter (cardsCount: number);
 }
 
@@ -102,7 +97,6 @@ export interface ICatalogView {
 
 // Интерфейс модального окна
 export interface IModalView {
-	closeButton: HTMLButtonElement;
 	openModal(): void;
 	closeModal(): void;
 	set content (element: HTMLElement);
@@ -110,7 +104,7 @@ export interface IModalView {
 
 // Интерфейс содержимого модального окна с корзиной
 export interface IBasketView {
-	totalPriceEl: HTMLElement;
+	totalPriceElement: HTMLElement;
 	submitButton: HTMLButtonElement;
 	set submitButtonText (text: string);
 	set totalPrice (totalPrice: number);
@@ -119,8 +113,8 @@ export interface IBasketView {
 // Родительский интерфейс формы
 export interface IFormView {
 	formEl: HTMLFormElement;
-	inputsEl: NodeListOf<HTMLInputElement>;
-	errorsEl: HTMLElement;
+	inputsElement: NodeListOf<HTMLInputElement>;
+	errorsElement: HTMLElement;
 	submitButton: HTMLButtonElement;
 	onInputChange (): void;
 	set errors (text: string);
@@ -132,21 +126,21 @@ export interface IFormView {
 export interface IOrderFormView extends IFormView {
 	cardPaymentButton: HTMLButtonElement;
 	cashPaymentButton: HTMLButtonElement;
-	addressInputEl: HTMLInputElement;
+	addressInputElement: HTMLInputElement;
 	set address (text: string);
 }
 
 // Интерфейс формы для сбора контактных данных
 export interface IContactsFormView extends IFormView {
-	emailInputEl: HTMLInputElement;
-	phoneInputEl: HTMLInputElement;
+	emailInputElement: HTMLInputElement;
+	phoneInputElement: HTMLInputElement;
 	set email (text: string);
 	set phone (text: string);
 }
 
 // Интерфейс окна с подтверждением оформления заказа
 export interface IOrderSuccessView {
-	totalPriceEl: HTMLElement;
+	totalPriceElement: HTMLElement;
 	successCloseButton: HTMLButtonElement;
 	set totalPrice (totalPrice: number);
 }
