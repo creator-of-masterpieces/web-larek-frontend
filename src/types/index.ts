@@ -76,12 +76,6 @@ export interface ICardFullView extends ICardBaseView {
 }
 
 
-// Интерфейс карточки товара, добавленной в корзину
-export interface ICardInBasketView extends ICardBaseView {
-	cardIndexElement: HTMLElement;
-	deleteButton: HTMLButtonElement;
-	set cardIndex(index: number);
-}
 
 // Интерфейс каталога карточек на главной странице
 export interface ICatalogView {

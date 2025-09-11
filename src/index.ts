@@ -11,6 +11,7 @@ import { CatalogView } from './components/view/catalog/CatalogView';
 import { ModalView } from './components/view/modal/ModalView';
 import { CardInPreviewView } from './components/view/card/CardInPreviewView';
 import { HeaderView } from './components/view/header/HeaderView';
+import { CardInBasketView } from './components/view/card/CardInBasket';
 
 // Элементы разметки
 const catalogElement = ensureElement<HTMLElement>('.gallery');
@@ -18,6 +19,7 @@ const catalogCardElement = ensureElement<HTMLTemplateElement>('#card-catalog');
 const previewCardElement = ensureElement<HTMLTemplateElement>('#card-preview');
 const modalElement = ensureElement<HTMLElement>('.modal');
 const headerElement = ensureElement<HTMLElement>('.header');
+const basketElement = ensureElement<HTMLTemplateElement>('#basket');
 
 // Прочие классы
 const baseApi: IApi = new Api(API_URL);
@@ -63,6 +65,10 @@ events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
 
 // Открывает корзину
 events.on(AppEvents.BasketOpen, () => {
+	const basketClonedElement = cloneTemplate<HTMLTemplateElement>(basketElement);
+	const basketView = new CardInBasketView(basketClonedElement, events);
+	const basketFilledelement = basketView.render({});
+	modalView.content = basketFilledelement;
 	modalView.openModal(); // Тут будет отрытие корзины в модалке.
 })
 
