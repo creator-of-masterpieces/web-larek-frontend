@@ -83,13 +83,6 @@ export interface ICardInBasketView extends ICardBaseView {
 	set cardIndex(index: number);
 }
 
-// Интерфейс шапки приложения, который управляет иконкой корзины
-export interface IHeaderView {
-	basketButton: HTMLButtonElement
-	basketCounterElement: HTMLElement
-	set counter (cardsCount: number);
-}
-
 // Интерфейс каталога карточек на главной странице
 export interface ICatalogView {
 	set content (cards: HTMLElement[]);

@@ -10,12 +10,14 @@ import { CardInCatalogView } from './components/view/card/CardInCatalogView';
 import { CatalogView } from './components/view/catalog/CatalogView';
 import { ModalView } from './components/view/modal/ModalView';
 import { CardInPreviewView } from './components/view/card/CardInPreviewView';
+import { HeaderView } from './components/view/header/HeaderView';
 
 // Элементы разметки
 const catalogElement = ensureElement<HTMLElement>('.gallery');
 const catalogCardElement = ensureElement<HTMLTemplateElement>('#card-catalog');
 const previewCardElement = ensureElement<HTMLTemplateElement>('#card-preview');
 const modalElement = ensureElement<HTMLElement>('.modal');
+const headerElement = ensureElement<HTMLElement>('.header');
 
 // Прочие классы
 const baseApi: IApi = new Api(API_URL);
@@ -28,6 +30,7 @@ const catalogData = new CardsData(events);
 // Классы вью
 const catalogView = new CatalogView(catalogElement, events);
 const modalView = new ModalView(modalElement, events);
+const headerView = new HeaderView(headerElement, events);
 
 // Загружает массив карточек и сохраняет их в данные каталога
 api.getCards()
@@ -45,26 +48,22 @@ events.on(AppEvents.CardsSaved, () => {
 		const cardView = new CardInCatalogView(cardClonedElement, events);
 		return cardView.render(item);
 	});
-	// Добавляет карточки в разметку
+	// Добавляет карточки в разметку.
 	catalogView.content = cards;
 });
 
-// Пытаюсь вывести выбранную карточку в модалку.
+// Выводит выбранную карточку в модальное окно.
 events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
-	// Вывод реальной карточки
 	const previewCardClonedElement = cloneTemplate<HTMLElement>(previewCardElement);
 	const previewCardView = new CardInPreviewView(previewCardClonedElement, events);
 	const previewCardFilled =  previewCardView.render(catalogData.getCard(id.cardId));
 	modalView.content = previewCardFilled;
 	modalView.openModal();
+})
 
-	// тестирую модалку
-	// const cardClonedElement = cloneTemplate<HTMLElement>(catalogCardElement);
-	// const cardView = new CardInCatalogView(cardClonedElement, events);
-	// modalView.content = cardView.render(cardView);
-	// modalView.openModal();
-	// console.log(id.cardId);
-	// console.log(catalogData.getCard(id.cardId));
+// Открывает корзину
+events.on(AppEvents.BasketOpen, () => {
+	modalView.openModal(); // Тут будет отрытие корзины в модалке.
 })
 
 

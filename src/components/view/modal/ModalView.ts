@@ -33,6 +33,7 @@ export class ModalView implements IModalView {
 
 	closeModal() {
 		this.modalElement.classList.remove('modal_active');
+		document.removeEventListener('keyup', this.handleEscUp);
 	}
 
 	handleEscUp (evt: KeyboardEvent) {
