@@ -10,10 +10,10 @@ export enum AppEvents {
 
 	CardsSaved = 'cards:saved',
 	BasketChanged = 'basket:changed',
-	ModalOpen = 'modal: open',
+	ModalOpen = 'modal:open',
 	ModalClose = 'modal:close',
 	ProductOpen = 'product:open',
-	ProductBuy = 'product:buy',
+	CardButtonClick = 'cardButton:click',
 	BasketOpen = 'basket:open',
 	BasketDelete = 'basket:delete',
 	BasketOrder = 'basket:order',

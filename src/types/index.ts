@@ -8,7 +8,7 @@ export type ApiPostMethods = 'POST' | 'GET';
 
 // Типы данных карточки, которые передаются в render
 export type CardBaseProps  = { title: string; price: number | null };
-export type CardMediaProps = { category?: string; image?: string };
+export type CardMediaProps = { category?: string; image?: string; index?: number; };
 export type CardsArrayProps ={ items: ICard[]};
 export type CardProps = CardBaseProps & CardMediaProps;
 
@@ -45,19 +45,9 @@ export interface IUserData {
 	address: string;
 	email: string;
 	phone: string;
-	GetUser (): IUser;
-	ValidateUser (userData: IUser): boolean;
-	SaveUser (userData: IUser): void;
-}
-
-// Интерфейс класса данных корзины
-export interface IBasketData {
-	Cards: ICard[];
-	AddCard (card: ICard[]): void;
-	RemoveCard (id: string): void;
-	GetTotalPrice(cards: ICard[]): number;
-	GetCards (): ICard[];
-	IsInBasket (id: string): boolean;
+	getUser (): IUser;
+	validateUser (userData: IUser): boolean;
+	saveUser (userData: IUser): void;
 }
 
 	// Интерфейсы слоя представления

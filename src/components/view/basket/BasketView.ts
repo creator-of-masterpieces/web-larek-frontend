@@ -2,8 +2,9 @@ import { Component } from '../shared/Component';
 import { IEvents } from '../../core/EventEmitter';
 import { ICard } from '../../../types';
 
+export type BasketProps = {totalPrice: number, content: HTMLElement[]};
 
-export class Basket extends Component<any> {
+export class BasketView extends Component<BasketProps> {
 	protected events: IEvents;
 	protected submitButton: HTMLButtonElement;
 	protected totalPriceCounter: HTMLElement;
@@ -16,9 +17,10 @@ export class Basket extends Component<any> {
 		this.events = events;
 		this.submitButton = container.querySelector('.basket__button');
 		this.totalPriceCounter = container.querySelector('.basket__price');
+		this.basketContent = container.querySelector('.basket__list');
 	}
 
-	set sotalPrice(totalPrice: number) {
+	set totalPrice(totalPrice: number) {
 		this.totalPriceCounter.textContent = totalPrice.toString();
 	}
 

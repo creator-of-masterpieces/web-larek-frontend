@@ -1,13 +1,17 @@
 import { IModalView } from '../../../types';
 import { IEvents } from '../../core/EventEmitter';
+import { Component } from '../shared/Component';
 
-export class ModalView implements IModalView {
+type ModalProps = {content: HTMLElement};
+
+export class ModalView extends Component<ModalProps> implements IModalView {
 	protected events: IEvents;
 	protected closeButton: HTMLButtonElement;
 	protected modalContent: HTMLElement;
 
 
 	constructor(protected modalElement: HTMLElement, events: IEvents) {
+		super(modalElement);
 		this.events = events;
 		this.closeButton = modalElement.querySelector('.modal__close');
 		this.modalContent = modalElement.querySelector('.modal__content');

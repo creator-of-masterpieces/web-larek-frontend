@@ -8,6 +8,7 @@ export class CardBaseView extends Component<CardProps> implements ICardBaseView 
 	protected cardPriceElement: HTMLElement;
 	protected cardId: string;
 	protected events: IEvents;
+
 	constructor(container: HTMLElement, events: IEvents) {
 		super(container);
 		this.events = events;

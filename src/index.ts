@@ -11,15 +11,30 @@ import { CatalogView } from './components/view/catalog/CatalogView';
 import { ModalView } from './components/view/modal/ModalView';
 import { CardInPreviewView } from './components/view/card/CardInPreviewView';
 import { HeaderView } from './components/view/header/HeaderView';
-import { CardInBasketView } from './components/view/card/CardInBasket';
+import { CardInBasketView } from './components/view/card/CardInBasketView';
+import { BasketData } from './components/model/BasketData';
+import { BasketView } from './components/view/basket/BasketView';
 
-// Элементы разметки
+// Элемент галереи
 const catalogElement = ensureElement<HTMLElement>('.gallery');
+
+//  Элемент карточки в каталоге
 const catalogCardElement = ensureElement<HTMLTemplateElement>('#card-catalog');
+
+// Элемент выбранной карточки
 const previewCardElement = ensureElement<HTMLTemplateElement>('#card-preview');
+
+// Элемент карточки в корзине
+const CardInBasketElement = ensureElement<HTMLTemplateElement>('#card-basket');
+
+// Элемент модального окна
 const modalElement = ensureElement<HTMLElement>('.modal');
+
+// Элемент шапки
 const headerElement = ensureElement<HTMLElement>('.header');
-const basketElement = ensureElement<HTMLTemplateElement>('#basket');
+
+// Клонированный элемент корзины
+const basketClonedElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplateElement>('#basket')) ;
 
 // Прочие классы
 const baseApi: IApi = new Api(API_URL);
@@ -28,11 +43,13 @@ const events = new EventEmitter();
 
 // Классы данных
 const catalogData = new CardsData(events);
+const basketData = new BasketData(events);
 
 // Классы вью
 const catalogView = new CatalogView(catalogElement, events);
 const modalView = new ModalView(modalElement, events);
 const headerView = new HeaderView(headerElement, events);
+const basketView = new BasketView(basketClonedElement, events);
 
 // Загружает массив карточек и сохраняет их в данные каталога
 api.getCards()
@@ -56,20 +73,78 @@ events.on(AppEvents.CardsSaved, () => {
 
 // Выводит выбранную карточку в модальное окно.
 events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
+	// Клонирую карточку
 	const previewCardClonedElement = cloneTemplate<HTMLElement>(previewCardElement);
+	// Создаю вью объект картчоки
 	const previewCardView = new CardInPreviewView(previewCardClonedElement, events);
+	// Заполняю карточку данными
 	const previewCardFilled =  previewCardView.render(catalogData.getCard(id.cardId));
+
+	// Устанавливаю текст кнопки купить/удалить
+	if(basketData.isInBasket(id.cardId)) {
+		previewCardView.buttonDeleteText();
+	}
+	else {
+		previewCardView.buttonBuyText;
+	}
+
+	// добавляю карточку в модальное окно и открываю окно
 	modalView.content = previewCardFilled;
 	modalView.openModal();
 })
 
-// Открывает корзину
-events.on(AppEvents.BasketOpen, () => {
-	const basketClonedElement = cloneTemplate<HTMLTemplateElement>(basketElement);
-	const basketView = new CardInBasketView(basketClonedElement, events);
-	const basketFilledelement = basketView.render({});
-	modalView.content = basketFilledelement;
-	modalView.openModal(); // Тут будет отрытие корзины в модалке.
+// Слушатель события изменения корзины
+events.on(AppEvents.BasketChanged, () => {
+
+	// Создаю массив корзинных html карточек. Для этого перебираю массив данных с карточками.
+	const cards = basketData.getCards().map((card, index) => {
+
+		// Клонирую html шаблон карточки
+		const cardInBasketCloned = cloneTemplate<HTMLElement>(CardInBasketElement);
+
+		// Создаю экземпляр класса вью карточки
+		const cardInBasketView = new CardInBasketView(cardInBasketCloned, events);
+
+		// Заполненный html элемент карточки
+		const cardInBasketFilled = cardInBasketView.render(card);
+
+		// Задаю порядковый номер карточки в корзине
+		cardInBasketFilled.querySelector('.basket__item-index').textContent = String(index + 1);
+
+		// Передаю в рендер вью карточки данные карточки
+		return cardInBasketView.render(card);
+
+	})
+	// Записываю получившийся массив заполненных html карточек в вью корзины
+	basketView.content = cards;
+
+	// Закрываю модалку с выбранной карточкой
+	modalView.closeModal();
 })
+
+// Слушатель события открытия корзины
+events.on(AppEvents.BasketOpen, ()=> {
+	// Рисую корзину в модалке, открываю модалку
+	modalView.render({ content: basketView.render() });
+	modalView.openModal();
+})
+
+// Слушатель клика по кнопке выбранной карточки
+events.on(AppEvents.CardButtonClick, ({ id }: {id: string}) => {
+	// Выбранная карточка
+	const selectedCard = catalogData.getCard(id);
+
+	// Проверка, есть ли карточка в корзине
+	if (basketData.isInBasket(id)) {
+		basketData.removeCard(id);
+	}
+	else {
+		basketData.addCard(selectedCard);
+	}
+});
+
+
+
+
 
 

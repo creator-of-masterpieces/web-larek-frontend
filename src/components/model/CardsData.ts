@@ -3,9 +3,9 @@ import { IEvents } from '../core/EventEmitter';
 import { AppEvents } from '../../utils/constants';
 
 export class CardsData implements ICardsData {
+	protected events: IEvents;
 	protected cards: ICard[];
 	protected preview: ICard;
-	protected events: IEvents;
 
 	constructor(events: IEvents) {
 		this.events = events;
