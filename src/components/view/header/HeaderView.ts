@@ -23,7 +23,6 @@ export class HeaderView extends Component<IHeaderView> implements IHeaderView {
 		})
 	}
 
-
 	set counter (cardsCount: number) {
 		this.basketCounterElement.textContent = cardsCount.toString();
 	}

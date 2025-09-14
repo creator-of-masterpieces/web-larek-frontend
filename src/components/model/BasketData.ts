@@ -46,4 +46,8 @@ export class BasketData implements IBasketData {
 	isInBasket(id: string): boolean {
 		return this.cardsInBasket.some(item => item.id === id);
 	}
+
+	getCardsCount() {
+		return this.cardsInBasket.length;
+	}
 }

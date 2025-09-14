@@ -126,6 +126,9 @@ events.on(AppEvents.BasketChanged, () => {
 	// Устанавливаю общую стоимость товара в корзине
 	basketView.totalPrice = basketData.getTotalPrice();
 
+	// Устанавливаю значения счетчика товаров в корзине
+	headerView.counter = basketData.getCardsCount();
+
 	// Закрываю модалку с выбранной карточкой
 	if(lastSource === 'preview') {
 		modalView.closeModal();
