@@ -1,4 +1,4 @@
-	// Типы данных
+// Типы данных
 
 // Способы оплаты
 export type TUserPayment = 'card' | 'cash' | '';
@@ -11,6 +11,10 @@ export type CardBaseProps  = { title: string; price: number | null };
 export type CardMediaProps = { category?: string; image?: string; index?: number; };
 export type CardsArrayProps ={ items: ICard[]};
 export type CardProps = CardBaseProps & CardMediaProps;
+
+// Тип источника события изменения корзины
+
+export type TBasketSource = 'preview' | 'basket';
 
 // Интерфейс карточки
 export interface ICard {
@@ -30,7 +34,7 @@ export interface IUser {
 	phone: string;
 }
 
-	// Интерфейсы слоя данных
+// Интерфейсы слоя данных
 
 // Интерфейс класса данных каталога карточек
 export interface ICardsData {
@@ -50,7 +54,7 @@ export interface IUserData {
 	saveUser (userData: IUser): void;
 }
 
-	// Интерфейсы слоя представления
+// Интерфейсы слоя представления
 
 // Базовый интерфейс карточки товара
 export interface ICardBaseView {
@@ -64,8 +68,6 @@ export interface ICardFullView extends ICardBaseView {
 	set category (text: string);
 	set image (link: string);
 }
-
-
 
 // Интерфейс каталога карточек на главной странице
 export interface ICatalogView {

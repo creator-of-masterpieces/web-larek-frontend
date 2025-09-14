@@ -18,7 +18,7 @@ export class CardInPreviewView extends CardFullView implements ICardPreviewView 
 		this.buyButton = container.querySelector('.card__button');
 
 		// Слушатель клика по кнопке купить
-		this.buyButton.addEventListener('click', (evt) => {
+		this.buyButton.addEventListener('click', () => {
 			events.emit(AppEvents.CardButtonClick, { id: this.cardId });
 		})
 	}

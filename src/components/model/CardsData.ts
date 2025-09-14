@@ -17,10 +17,11 @@ export class CardsData implements ICardsData {
 		this.events.emit(AppEvents.CardsSaved);
 	}
 
+	// Возвращает карточки товаров
 	getCards() {
 		return this.cards;
 	}
-
+ // Возвращает карточку по id
 	getCard(id: string) {
 		return this.cards.find((card) => card.id === id);
 	}

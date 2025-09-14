@@ -51,6 +51,11 @@ const modalView = new ModalView(modalElement, events);
 const headerView = new HeaderView(headerElement, events);
 const basketView = new BasketView(basketClonedElement, events);
 
+// Хранит значение источника события изменения корзины:
+// - из карточки в превью
+// - из карточки в корзине
+let lastSource: 'preview' | 'basket' | null = null;
+
 // Загружает массив карточек и сохраняет их в данные каталога
 api.getCards()
 .then((cards) => {
@@ -85,7 +90,7 @@ events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
 		previewCardView.buttonDeleteText();
 	}
 	else {
-		previewCardView.buttonBuyText;
+		previewCardView.buttonBuyText();
 	}
 
 	// добавляю карточку в модальное окно и открываю окно
@@ -118,8 +123,14 @@ events.on(AppEvents.BasketChanged, () => {
 	// Записываю получившийся массив заполненных html карточек в вью корзины
 	basketView.content = cards;
 
+	// Устанавливаю общую стоимость товара в корзине
+	basketView.totalPrice = basketData.getTotalPrice();
+
 	// Закрываю модалку с выбранной карточкой
-	modalView.closeModal();
+	if(lastSource === 'preview') {
+		modalView.closeModal();
+	}
+	lastSource = null;
 })
 
 // Слушатель события открытия корзины
@@ -131,6 +142,8 @@ events.on(AppEvents.BasketOpen, ()=> {
 
 // Слушатель клика по кнопке выбранной карточки
 events.on(AppEvents.CardButtonClick, ({ id }: {id: string}) => {
+	// Источник клика
+	lastSource = 'preview';
 	// Выбранная карточка
 	const selectedCard = catalogData.getCard(id);
 
@@ -142,6 +155,12 @@ events.on(AppEvents.CardButtonClick, ({ id }: {id: string}) => {
 		basketData.addCard(selectedCard);
 	}
 });
+
+// Слушатель клика по кнопке удаления карточки в корзине
+events.on(AppEvents.BasketDelete, ({id}: {id: string})=> {
+	lastSource = 'basket';
+	basketData.removeCard(id);
+})
 
 
 
