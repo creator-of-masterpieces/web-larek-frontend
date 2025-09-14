@@ -1,7 +1,7 @@
 // Типы данных
 
 // Способы оплаты
-export type TUserPayment = 'card' | 'cash' | '';
+export type TUserPayment = 'online' | 'cash' | '';
 
 // Типы запросов к серверу
 export type ApiPostMethods = 'POST' | 'GET';
@@ -32,6 +32,11 @@ export interface IUser {
 	address: string;
 	email: string;
 	phone: string;
+	total: number,
+	items: [
+		'854cef69-976d-4c2a-a18c-2aa45046c390',
+		'c101ab44-ed99-4a54-990d-47aa2bb4e7d9'
+	]
 }
 
 // Интерфейсы слоя данных
@@ -41,17 +46,6 @@ export interface ICardsData {
 	setCards (cards: ICard[]): void;
 	// savePreview (cards: ICard[]): void;
 	getCards(): ICard[];
-}
-
-// Интерфейс класса данных покупателя
-export interface IUserData {
-	payment: TUserPayment
-	address: string;
-	email: string;
-	phone: string;
-	getUser (): IUser;
-	validateUser (userData: IUser): boolean;
-	saveUser (userData: IUser): void;
 }
 
 // Интерфейсы слоя представления
@@ -91,7 +85,7 @@ export interface IBasketView {
 
 // Родительский интерфейс формы
 export interface IFormView {
-	formEl: HTMLFormElement;
+	container: HTMLFormElement;
 	inputsElement: NodeListOf<HTMLInputElement>;
 	errorsElement: HTMLElement;
 	submitButton: HTMLButtonElement;
@@ -109,13 +103,6 @@ export interface IOrderFormView extends IFormView {
 	set address (text: string);
 }
 
-// Интерфейс формы для сбора контактных данных
-export interface IContactsFormView extends IFormView {
-	emailInputElement: HTMLInputElement;
-	phoneInputElement: HTMLInputElement;
-	set email (text: string);
-	set phone (text: string);
-}
 
 // Интерфейс окна с подтверждением оформления заказа
 export interface IOrderSuccessView {

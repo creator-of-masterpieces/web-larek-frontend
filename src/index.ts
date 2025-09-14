@@ -1,7 +1,7 @@
 import './scss/styles.scss';
 import { CardsData } from './components/model/CardsData';
 import { EventEmitter, IEvents } from './components/core/EventEmitter';
-import { IApi } from './types';
+import { IApi, IUser } from './types';
 import { Api } from './components/core/Api';
 import { API_URL, AppEvents, CDN_URL } from './utils/constants';
 import { AppApi } from './components/core/AppApi';
@@ -14,6 +14,7 @@ import { HeaderView } from './components/view/header/HeaderView';
 import { CardInBasketView } from './components/view/card/CardInBasketView';
 import { BasketData } from './components/model/BasketData';
 import { BasketView } from './components/view/basket/BasketView';
+import { OrderFormView } from './components/view/form/OrderFormView';
 
 // Элемент галереи
 const catalogElement = ensureElement<HTMLElement>('.gallery');
@@ -36,6 +37,11 @@ const headerElement = ensureElement<HTMLElement>('.header');
 // Клонированный элемент корзины
 const basketClonedElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplateElement>('#basket')) ;
 
+// Клонированный элемент формы оплаты
+const orderFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#order')) ;
+
+const contactsFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#contacts'));
+
 // Прочие классы
 const baseApi: IApi = new Api(API_URL);
 const api = new AppApi(baseApi, CDN_URL);
@@ -50,6 +56,8 @@ const catalogView = new CatalogView(catalogElement, events);
 const modalView = new ModalView(modalElement, events);
 const headerView = new HeaderView(headerElement, events);
 const basketView = new BasketView(basketClonedElement, events);
+const orderFormView = new OrderFormView(orderFormElement, events);
+const contactsFormView = new OrderFormView(contactsFormElement, events);
 
 // Хранит значение источника события изменения корзины:
 // - из карточки в превью
@@ -164,6 +172,36 @@ events.on(AppEvents.BasketDelete, ({id}: {id: string})=> {
 	lastSource = 'basket';
 	basketData.removeCard(id);
 })
+
+// Тестовый объект пользователя
+const testUser: IUser = {
+	"payment": "online",
+	"email": "test@test.ru",
+	"phone": "+71234567890",
+	"address": "Spb Vosstania 1",
+	"total": 2200,
+	"items": [
+		"854cef69-976d-4c2a-a18c-2aa45046c390",
+		"c101ab44-ed99-4a54-990d-47aa2bb4e7d9"
+	]
+}
+
+// Слушатель сабмита корзины
+events.on(AppEvents.BasketOrder, () => {
+	const orderFormView = new OrderFormView(orderFormElement, events);
+
+	if(orderFormView.validateUser(testUser)) {
+		orderFormView.submitButton = true;
+	}
+
+	modalView.render({ content: orderFormView.render() });
+})
+
+// Слушатель сабмита формы оплаты
+events.on(AppEvents.FormOrderSubmit, () => {
+	modalView.render({content: contactsFormView.render()});
+})
+
 
 
 
