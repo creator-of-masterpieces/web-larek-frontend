@@ -10,6 +10,8 @@ export enum AppEvents {
 	CardsSaved = 'cards:saved',
 	PaymentSaved = 'payment: saved',
 	AddressSaved = 'address: saved',
+	EmailSaved = 'email:saved',
+	PhoneSaved = 'phone:saved',
 	BasketChanged = 'basket:changed',
 	ModalOpen = 'modal:open',
 	ModalClose = 'modal:close',
@@ -19,10 +21,11 @@ export enum AppEvents {
 	BasketDelete = 'basket:delete',
 	BasketOrder = 'basket:order',
 	FormOrderSubmit = 'formOrder:submit',
-	FormOrderInput = 'formOrder:input',
+	FormContactsInputEmail = 'formContactsEmail:input',
+	FormContactsInputPhone = 'formContactsPhone:input',
 	FormOrderOnline = 'formOrder:online',
 	FormOrderCash = 'formOrder:cash',
-	FormContactsInput = 'formContacts:input',
+	FormOrderInput = 'formOrder:input',
 	FormContactsSubmit = 'formContacts:submit',
 	OrderSuccessMessageSuccessConfirm = 'orderSuccessMessage:successConfirm'
 }

@@ -59,6 +59,10 @@ const basketView = new BasketView(basketClonedElement, events);
 const orderFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#order')) ;
 const orderFormView = new OrderFormView(orderFormElement, events);
 
+// Клонирую темплейт формы контактов. Передаю его в класс формы
+const contactsFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#contacts'));
+const contactsFormView = new ContactsFormView(contactsFormElement, events);
+
 
 // Хранит значение источника события изменения корзины:
 // - из карточки в превью
@@ -174,19 +178,6 @@ events.on(AppEvents.BasketDelete, ({id}: {id: string})=> {
 	basketData.removeCard(id);
 })
 
-// Тестовый объект пользователя
-const testUser: IUser = {
-	"payment": "online",
-	"email": "test@test.ru",
-	"phone": "+71234567890",
-	"address": "Spb Vosstania 1",
-	"total": 2200,
-	"items": [
-		"854cef69-976d-4c2a-a18c-2aa45046c390",
-		"c101ab44-ed99-4a54-990d-47aa2bb4e7d9"
-	]
-}
-
 // Слушатель сабмита корзины. Открывает форму оплаты.
 events.on(AppEvents.BasketOrder, () => {
 
@@ -197,22 +188,24 @@ events.on(AppEvents.BasketOrder, () => {
 // Слушатель нажатия кнопки оплаты наличными
 events.on<{ payment: TUserPayment }>(AppEvents.FormOrderCash, (payment) => {
 	userData.setPayment(payment.payment)
-	orderFormView.render({submitButtonDisable: userData.isOrderDataValid()})
+	orderFormView.render({submitButtonDisable: userData.isOrderDataValid(), error: userData.getError()})
 });
 
 // Слушатель нажатия кнопки оплаты онлайн
 events.on<{ payment: TUserPayment }>(AppEvents.FormOrderOnline, (payment) => {
 	userData.setPayment(payment.payment);
+	orderFormView.render({submitButtonDisable: userData.isOrderDataValid(), error: userData.getError()})
 })
 
 // Слушатель ввода в поле адреса
 events.on<{address: string}>(AppEvents.FormOrderInput, (address) => {
 	userData.setAddress(address.address);
+	orderFormView.render({submitButtonDisable: userData.isOrderDataValid(), error: userData.getError()})
 })
 
 // Слушатель сохранения данных оплаты
 events.on<{payment: TUserPayment}>(AppEvents.PaymentSaved, (payment) => {
-	if (payment.payment === 'online') {
+	if (payment.payment === 'card') {
 		orderFormView.activePaymentButton = true;
 	}
 	else {
@@ -223,12 +216,21 @@ events.on<{payment: TUserPayment}>(AppEvents.PaymentSaved, (payment) => {
 // Слушатель сабмита формы оплаты
 events.on(AppEvents.FormOrderSubmit, () => {
 
-	// Клонирую темплейт формы контактов. Передаю его в класс формы
-	const contactsFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#contacts'));
-	const contactsFormView = new ContactsFormView(contactsFormElement, events);
-
 	// Отрисовываю элемент формы в модальном окне
-	modalView.render({content: contactsFormView.render()});
+	modalView.render({content: contactsFormView.render({submitButtonDisable: false})});
+})
+
+// Слушатель изменения поля email
+events.on<{email: string}>(AppEvents.FormContactsInputEmail, (email)=> {
+	userData.setEmail(email.email);
+	contactsFormView.render({submitButtonDisable: userData.isContactsDataValid()})
+
+})
+
+// Слушатель изменения поля телефон
+events.on<{phone: string}>(AppEvents.FormContactsInputPhone, (phone)=> {
+	userData.setPhone(phone.phone);
+	contactsFormView.render({submitButtonDisable: userData.isContactsDataValid()})
 })
 
 

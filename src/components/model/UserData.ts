@@ -21,6 +21,7 @@ export class UserData implements IUserData {
 	protected email: string;
 	protected phone: string;
 	protected user: IUser;
+	protected error: string;
 
 	constructor(events: IEvents) {
 		this.events = events;
@@ -52,18 +53,36 @@ export class UserData implements IUserData {
 
 	setEmail(email:string) {
 		this.email = email;
+		this.events.emit(AppEvents.EmailSaved);
 	}
 
 	setPhone(phone:string) {
 		this.phone = phone;
+		this.events.emit(AppEvents.PhoneSaved);
 	}
 
 	isOrderDataValid() {
 		if(this.payment && this.address) {
+			this.error = "";
+			return true;
+		}
+		else {
+			this.error = "Необходимо указать адрес";
+			return false;
+		}
+	}
+
+	isContactsDataValid() {
+		if(this.email && this.phone) {
+			this.error = "";
 			return true;
 		}
 		else {
 			return false;
 		}
 	}
+
+	getError() {
+		return this.error;
+}
 }

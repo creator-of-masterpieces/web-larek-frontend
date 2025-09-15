@@ -1,7 +1,7 @@
 // Типы данных
 
 // Способы оплаты
-export type TUserPayment = 'online' | 'cash' | '';
+export type TUserPayment = 'card' | 'cash' | '';
 
 // Типы запросов к серверу
 export type ApiPostMethods = 'POST' | 'GET';
