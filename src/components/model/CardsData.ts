@@ -21,6 +21,7 @@ export class CardsData implements ICardsData {
 	getCards() {
 		return this.cards;
 	}
+
  // Возвращает карточку по id
 	getCard(id: string) {
 		return this.cards.find((card) => card.id === id);

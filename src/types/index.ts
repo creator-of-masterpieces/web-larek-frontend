@@ -33,10 +33,7 @@ export interface IUser {
 	email: string;
 	phone: string;
 	total: number,
-	items: [
-		'854cef69-976d-4c2a-a18c-2aa45046c390',
-		'c101ab44-ed99-4a54-990d-47aa2bb4e7d9'
-	]
+	items: string[]
 }
 
 // Интерфейсы слоя данных
@@ -84,25 +81,12 @@ export interface IBasketView {
 }
 
 // Родительский интерфейс формы
-export interface IFormView {
-	container: HTMLFormElement;
-	inputsElement: NodeListOf<HTMLInputElement>;
-	errorsElement: HTMLElement;
-	submitButton: HTMLButtonElement;
+export interface IBaseFormView {
 	onInputChange (): void;
 	set errors (text: string);
-	set valid (value: boolean);
+	isValid (data: IUser): boolean;
 	getInputsValue (): Record<string, string>;
 }
-
-// Интерфейс формы сбора информации об оплате и адресе
-export interface IOrderFormView extends IFormView {
-	cardPaymentButton: HTMLButtonElement;
-	cashPaymentButton: HTMLButtonElement;
-	addressInputElement: HTMLInputElement;
-	set address (text: string);
-}
-
 
 // Интерфейс окна с подтверждением оформления заказа
 export interface IOrderSuccessView {

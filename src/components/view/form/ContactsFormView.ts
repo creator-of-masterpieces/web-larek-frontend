@@ -1,9 +1,10 @@
-import { IFormView } from '../../../types';
+import { IBaseFormView } from '../../../types';
 import { IEvents } from '../../core/EventEmitter';
 import { Component } from '../shared/Component';
+import { BaseFormView } from './BaseFormView';
 
 // Интерфейс формы для сбора контактных данных
-export interface IContactsFormView extends IFormView {
+export interface IContactsFormView extends IBaseFormView {
 	set email (email: string);
 	set phone (text: string);
 }
@@ -13,14 +14,14 @@ interface contactsFormProps {
 	phoneInputElement: HTMLInputElement;
 }
 
-export class ContactsFormView extends Component<contactsFormProps>{
+export class ContactsFormView extends BaseFormView implements IContactsFormView {
 	protected events: IEvents
 	protected emailInputElement: HTMLInputElement;
 	protected phoneInputElement: HTMLInputElement;
 	protected submitButton: HTMLButtonElement;
 
-	constructor(container: HTMLElement, events: IEvents) {
-		super(container);
+	constructor(container: HTMLFormElement, events: IEvents) {
+		super(container, events);
 		this.events	= events;
 		this.emailInputElement = container.querySelector('input[name = email]');
 		this.phoneInputElement = container.querySelector('input[phone = email]');

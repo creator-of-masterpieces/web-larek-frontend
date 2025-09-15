@@ -1,15 +1,22 @@
 import { IEvents } from '../../core/EventEmitter';
 import { Component } from '../shared/Component';
-import { IUser } from '../../../types';
+import { IBaseFormView, IUser } from '../../../types';
 import { AppEvents } from '../../../utils/constants';
+import { BaseFormView } from './BaseFormView';
 
 interface OrderFormProps {
 	address: string | null;
-
 	validateUser(value: boolean): boolean;
 }
 
-export class OrderFormView extends Component<OrderFormProps> {
+// Интерфейс формы сбора информации об оплате и адресе
+export interface IOrderFormView extends IBaseFormView {
+	set address (text: string);
+	set enableSubmit(value: boolean);
+	validateUser(userData: Partial<IUser>): boolean;
+}
+
+export class OrderFormView extends BaseFormView implements IOrderFormView {
 	protected events: IEvents;
 	protected cardPaymentButton: HTMLButtonElement;
 	protected cashPaymentButton: HTMLButtonElement;
@@ -17,7 +24,7 @@ export class OrderFormView extends Component<OrderFormProps> {
 	protected submitButtonElement: HTMLButtonElement;
 
 	constructor(container: HTMLFormElement, events: IEvents) {
-		super(container);
+		super(container, events);
 		this.events = events;
 		this.cardPaymentButton = container.querySelector('input[name = card]');
 		this.cashPaymentButton = container.querySelector('input[name = cash]');
@@ -27,9 +34,17 @@ export class OrderFormView extends Component<OrderFormProps> {
 		this.submitButtonElement.addEventListener('click', () => {
 			events.emit(AppEvents.FormOrderSubmit);
 		})
+
+		this.cardPaymentButton.addEventListener('click', () => {
+			this.events.emit(AppEvents.FormOrderOnline);
+		})
+
+		this.cashPaymentButton.addEventListener('click', () => {
+			this.events.emit(AppEvents.FormOrderCash);
+		})
 	}
 
-	set submitButton(value: boolean) {
+	set enableSubmit(value: boolean) {
 		if (value) {
 			this.submitButtonElement.disabled = false;
 		}

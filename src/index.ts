@@ -15,6 +15,8 @@ import { CardInBasketView } from './components/view/card/CardInBasketView';
 import { BasketData } from './components/model/BasketData';
 import { BasketView } from './components/view/basket/BasketView';
 import { OrderFormView } from './components/view/form/OrderFormView';
+import { ContactsFormView } from './components/view/form/ContactsFormView';
+import { UserData } from './components/model/UserData';
 
 // Элемент галереи
 const catalogElement = ensureElement<HTMLElement>('.gallery');
@@ -35,12 +37,7 @@ const modalElement = ensureElement<HTMLElement>('.modal');
 const headerElement = ensureElement<HTMLElement>('.header');
 
 // Клонированный элемент корзины
-const basketClonedElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplateElement>('#basket')) ;
-
-// Клонированный элемент формы оплаты
-const orderFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#order')) ;
-
-const contactsFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#contacts'));
+const basketClonedElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplateElement>('#basket'));
 
 // Прочие классы
 const baseApi: IApi = new Api(API_URL);
@@ -50,14 +47,13 @@ const events = new EventEmitter();
 // Классы данных
 const catalogData = new CardsData(events);
 const basketData = new BasketData(events);
+const userData = new UserData(events);
 
 // Классы вью
 const catalogView = new CatalogView(catalogElement, events);
 const modalView = new ModalView(modalElement, events);
 const headerView = new HeaderView(headerElement, events);
 const basketView = new BasketView(basketClonedElement, events);
-const orderFormView = new OrderFormView(orderFormElement, events);
-const contactsFormView = new OrderFormView(contactsFormElement, events);
 
 // Хранит значение источника события изменения корзины:
 // - из карточки в превью
@@ -88,7 +84,7 @@ events.on(AppEvents.CardsSaved, () => {
 events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
 	// Клонирую карточку
 	const previewCardClonedElement = cloneTemplate<HTMLElement>(previewCardElement);
-	// Создаю вью объект картчоки
+	// Создаю вью объект карточки
 	const previewCardView = new CardInPreviewView(previewCardClonedElement, events);
 	// Заполняю карточку данными
 	const previewCardFilled =  previewCardView.render(catalogData.getCard(id.cardId));
@@ -188,21 +184,30 @@ const testUser: IUser = {
 
 // Слушатель сабмита корзины
 events.on(AppEvents.BasketOrder, () => {
+
+	// Клонирую темплейт формы оплаты. Передаю его в класс формы
+	const orderFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#order')) ;
 	const orderFormView = new OrderFormView(orderFormElement, events);
 
+	// Валидация полей формы
 	if(orderFormView.validateUser(testUser)) {
-		orderFormView.submitButton = true;
+		orderFormView.enableSubmit = true;
 	}
 
+	// Отрисовываю форму в модальном окне
 	modalView.render({ content: orderFormView.render() });
 })
 
 // Слушатель сабмита формы оплаты
 events.on(AppEvents.FormOrderSubmit, () => {
+
+	// Клонирую темплейт формы контактов. Передаю его в класс формы
+	const contactsFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#contacts'));
+	const contactsFormView = new ContactsFormView(contactsFormElement, events);
+
+	// Отрисовываю элемент формы в модальном окне
 	modalView.render({content: contactsFormView.render()});
 })
-
-
 
 
 
