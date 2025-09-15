@@ -13,7 +13,7 @@ interface OrderFormProps {
 export interface IOrderFormView extends IBaseFormView {
 	set address (text: string);
 	set enableSubmit(value: boolean);
-	validateUser(userData: Partial<IUser>): boolean;
+	set submitButtonDisable(isValid: boolean);
 }
 
 export class OrderFormView extends BaseFormView implements IOrderFormView {
@@ -26,21 +26,33 @@ export class OrderFormView extends BaseFormView implements IOrderFormView {
 	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
 		this.events = events;
-		this.cardPaymentButton = container.querySelector('input[name = card]');
-		this.cashPaymentButton = container.querySelector('input[name = cash]');
-		this.addressInputElement = container.querySelector('input[name = address]');
-		this.submitButtonElement = container.querySelector('button[type = submit]');
+		this.cardPaymentButton = container.querySelector('button[name = "card"]');
+		this.cashPaymentButton = container.querySelector('button[name = "cash"]');
+		this.addressInputElement = container.querySelector('input[name = "address"]');
+		this.submitButtonElement = container.querySelector('button[type = "submit"]');
 
-		this.submitButtonElement.addEventListener('click', () => {
-			events.emit(AppEvents.FormOrderSubmit);
-		})
-
+		// Слушатель выбора метода оплаты онлайн
 		this.cardPaymentButton.addEventListener('click', () => {
-			this.events.emit(AppEvents.FormOrderOnline);
+			this.events.emit(AppEvents.FormOrderOnline, {payment: 'card'});
+			console.log('Клик по кнопке оплаты онлайн')
 		})
 
+		// Слушатель выбора метода оплаты наличными
 		this.cashPaymentButton.addEventListener('click', () => {
-			this.events.emit(AppEvents.FormOrderCash);
+			this.events.emit(AppEvents.FormOrderCash, {payment: 'cash'});
+			console.log('Клик по кнопке оплаты наличными')
+		})
+
+		// Слушатель ввода адреса
+		this.addressInputElement.addEventListener('input', () => {
+			events.emit(AppEvents.FormOrderInput, { address: this.addressInputElement.value });
+			console.log('Ввод в поле адрес');
+		})
+
+		// Слушатель сабмита формы
+		this.container.addEventListener('submit', (event) => {
+			event.preventDefault();
+			events.emit(AppEvents.FormOrderSubmit);
 		})
 	}
 
@@ -57,7 +69,24 @@ export class OrderFormView extends BaseFormView implements IOrderFormView {
 		this.addressInputElement.value = text;
 	}
 
-	validateUser(userData: Partial<IUser>) {
-		return true;
+	set activePaymentButton(isCard: boolean) {
+		if(isCard) {
+			this.cardPaymentButton.classList.add('button_alt-active');
+			this.cashPaymentButton.classList.remove('button_alt-active');
+		}
+		else {
+			this.cashPaymentButton.classList.add('button_alt-active');
+			this.cardPaymentButton.classList.remove('button_alt-active');
+		}
+	}
+
+	set submitButtonDisable(isValid: boolean) {
+		if(isValid) {
+			this.submitButtonElement.disabled = false;
+		}
+		else {
+			this.submitButtonElement.disabled = true;
+		}
+
 	}
 }

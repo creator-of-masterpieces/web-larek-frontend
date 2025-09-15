@@ -1,15 +1,17 @@
 import { IUser, TUserPayment } from '../../types';
 import { IEvents } from '../core/EventEmitter';
+import { AppEvents } from '../../utils/constants';
 
 // Интерфейс класса данных покупателя
 export interface IUserData {
-	getUserData (): Partial<IUser>;
-	validateUser (userData: IUser): boolean;
-	saveUserData (userData: Partial<IUser>): void;
+	getUserData(): Partial<IUser>;
+	validateUser(userData: IUser): boolean;
+	saveUserData(userData: Partial<IUser>): void;
 	setPayment(method:TUserPayment): void;
 	setAddress(address:string): void;
 	setEmail(email:string): void;
 	setPhone(phone:string): void;
+	isOrderDataValid(): boolean;
 }
 
 export class UserData implements IUserData {
@@ -38,10 +40,14 @@ export class UserData implements IUserData {
 
 	setPayment(method:TUserPayment) {
 		this.payment = method;
+		this.events.emit(AppEvents.PaymentSaved, {payment: this.payment});
+		console.log(`Сохранен метод оплаты: ${this.payment}`);
 	}
 
 	setAddress(address:string) {
 		this.address = address;
+		this.events.emit(AppEvents.AddressSaved);
+		console.log(`Сохранен адрес: ${this.address}`);
 	}
 
 	setEmail(email:string) {
@@ -50,5 +56,14 @@ export class UserData implements IUserData {
 
 	setPhone(phone:string) {
 		this.phone = phone;
+	}
+
+	isOrderDataValid() {
+		if(this.payment && this.address) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }

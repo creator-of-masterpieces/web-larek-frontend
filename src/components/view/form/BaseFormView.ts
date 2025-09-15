@@ -3,7 +3,8 @@ import { IBaseFormView, IUser } from '../../../types';
 import { IEvents } from '../../core/EventEmitter';
 
 interface BaseFormProps {
-	error: string;
+	error?: string;
+	submitButtonDisable: boolean;
 }
 
 export class BaseFormView extends Component<BaseFormProps> implements IBaseFormView {

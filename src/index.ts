@@ -1,7 +1,7 @@
 import './scss/styles.scss';
 import { CardsData } from './components/model/CardsData';
 import { EventEmitter, IEvents } from './components/core/EventEmitter';
-import { IApi, IUser } from './types';
+import { IApi, IUser, TUserPayment } from './types';
 import { Api } from './components/core/Api';
 import { API_URL, AppEvents, CDN_URL } from './utils/constants';
 import { AppApi } from './components/core/AppApi';
@@ -54,6 +54,11 @@ const catalogView = new CatalogView(catalogElement, events);
 const modalView = new ModalView(modalElement, events);
 const headerView = new HeaderView(headerElement, events);
 const basketView = new BasketView(basketClonedElement, events);
+
+// Клонирую темплейт формы оплаты. Передаю его в класс формы
+const orderFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#order')) ;
+const orderFormView = new OrderFormView(orderFormElement, events);
+
 
 // Хранит значение источника события изменения корзины:
 // - из карточки в превью
@@ -182,20 +187,37 @@ const testUser: IUser = {
 	]
 }
 
-// Слушатель сабмита корзины
+// Слушатель сабмита корзины. Открывает форму оплаты.
 events.on(AppEvents.BasketOrder, () => {
-
-	// Клонирую темплейт формы оплаты. Передаю его в класс формы
-	const orderFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#order')) ;
-	const orderFormView = new OrderFormView(orderFormElement, events);
-
-	// Валидация полей формы
-	if(orderFormView.validateUser(testUser)) {
-		orderFormView.enableSubmit = true;
-	}
 
 	// Отрисовываю форму в модальном окне
 	modalView.render({ content: orderFormView.render() });
+})
+
+// Слушатель нажатия кнопки оплаты наличными
+events.on<{ payment: TUserPayment }>(AppEvents.FormOrderCash, (payment) => {
+	userData.setPayment(payment.payment)
+	orderFormView.render({submitButtonDisable: userData.isOrderDataValid()})
+});
+
+// Слушатель нажатия кнопки оплаты онлайн
+events.on<{ payment: TUserPayment }>(AppEvents.FormOrderOnline, (payment) => {
+	userData.setPayment(payment.payment);
+})
+
+// Слушатель ввода в поле адреса
+events.on<{address: string}>(AppEvents.FormOrderInput, (address) => {
+	userData.setAddress(address.address);
+})
+
+// Слушатель сохранения данных оплаты
+events.on<{payment: TUserPayment}>(AppEvents.PaymentSaved, (payment) => {
+	if (payment.payment === 'online') {
+		orderFormView.activePaymentButton = true;
+	}
+	else {
+		orderFormView.activePaymentButton = false;
+	}
 })
 
 // Слушатель сабмита формы оплаты
