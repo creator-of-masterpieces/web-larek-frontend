@@ -142,6 +142,9 @@ events.on(AppEvents.BasketChanged, () => {
 	// Устанавливаю значения счетчика товаров в корзине
 	headerView.counter = basketData.getCardsCount();
 
+	// Валидация корзины (Блокирование кнопки сабмита)
+	basketView.render({submitButtonDisable: basketData.isEmptyBasket()});
+
 	// Закрываю модалку с выбранной карточкой
 	if(lastSource === 'preview') {
 		modalView.closeModal();
@@ -152,7 +155,7 @@ events.on(AppEvents.BasketChanged, () => {
 // Слушатель события открытия корзины
 events.on(AppEvents.BasketOpen, ()=> {
 	// Рисую корзину в модалке, открываю модалку
-	modalView.render({ content: basketView.render() });
+	modalView.render({ content: basketView.render({submitButtonDisable: basketData.isEmptyBasket()}) });
 	modalView.openModal();
 })
 
@@ -177,6 +180,8 @@ events.on(AppEvents.BasketDelete, ({id}: {id: string})=> {
 	lastSource = 'basket';
 	basketData.removeCard(id);
 })
+
+//
 
 // Слушатель сабмита корзины. Открывает форму оплаты.
 events.on(AppEvents.BasketOrder, () => {

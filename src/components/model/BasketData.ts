@@ -50,4 +50,13 @@ export class BasketData implements IBasketData {
 	getCardsCount() {
 		return this.cardsInBasket.length;
 	}
+
+	isEmptyBasket() {
+		if(this.cardsInBasket.length) {
+			return false;
+		}
+		else {
+			return true;
+		}
+}
 }

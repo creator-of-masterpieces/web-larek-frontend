@@ -32,8 +32,18 @@ export interface IUser {
 	address: string;
 	email: string;
 	phone: string;
-	total: number,
-	items: string[]
+}
+
+// Данные заказа
+export interface IOrder extends IUser {
+	total: number;
+	items: string[];
+}
+
+// Ответ сервера на успешную отправку заказа
+export interface IApiOrderResponse {
+	id: string;
+	total: number;
 }
 
 // Интерфейсы слоя данных

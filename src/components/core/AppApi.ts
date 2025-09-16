@@ -1,5 +1,5 @@
-import { IApi, ICard} from '../../types';
-import { ApiListResponse } from './Api';
+import { ApiPostMethods, IApi, IApiOrderResponse, ICard, IOrder } from '../../types';
+import { Api, ApiListResponse } from './Api';
 
 export class AppApi {
 	private _baseApi: IApi;
@@ -18,5 +18,10 @@ export class AppApi {
 					image: this.cdn + item.image
 				}))
 			);
+	}
+
+	sendOrderData(orderData: IOrder):Promise<IApiOrderResponse> {
+		return this._baseApi.post<IApiOrderResponse>(`/order`, orderData, `POST`)
+			.then((response)=> response)
 	}
 }
