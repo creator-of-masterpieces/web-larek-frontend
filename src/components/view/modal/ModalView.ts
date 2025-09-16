@@ -1,6 +1,7 @@
 import { IModalView } from '../../../types';
 import { IEvents } from '../../core/EventEmitter';
 import { Component } from '../shared/Component';
+import { AppEvents } from '../../../utils/constants';
 
 type ModalProps = {content: HTMLElement};
 
@@ -33,11 +34,13 @@ export class ModalView extends Component<ModalProps> implements IModalView {
 	openModal() {
 		this.modalElement.classList.add('modal_active');
 		document.addEventListener('keyup', this.handleEscUp);
+		this.events.emit(AppEvents.ModalOpen);
 	}
 
 	closeModal() {
 		this.modalElement.classList.remove('modal_active');
 		document.removeEventListener('keyup', this.handleEscUp);
+		this.events.emit(AppEvents.ModalClose);
 	}
 
 	handleEscUp (evt: KeyboardEvent) {

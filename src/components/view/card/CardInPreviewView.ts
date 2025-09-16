@@ -34,4 +34,9 @@ export class CardInPreviewView extends CardFullView implements ICardPreviewView 
 	buttonBuyText() {
 		this.buyButton.textContent = 'Купить';
 	}
+
+	set buttonDisable(value: boolean) {
+		this.buyButton.disabled = value;
+		this.buyButton.textContent = 'Недоступно';
+	}
 }

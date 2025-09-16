@@ -94,4 +94,9 @@ export class OrderFormView extends BaseFormView implements IOrderFormView {
 			this.submitButtonElement.disabled = true;
 		}
 	}
+
+	clearButtonState() {
+		this.cardPaymentButton.classList.remove('button_alt-active');
+		this.cashPaymentButton.classList.remove('button_alt-active');
+	}
 }

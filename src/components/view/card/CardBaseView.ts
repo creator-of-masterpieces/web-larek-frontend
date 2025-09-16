@@ -22,7 +22,7 @@ export class CardBaseView extends Component<CardProps> implements ICardBaseView 
 
 	set price (price: number) {
 		if(price){
-			this.cardPriceElement.textContent = price.toString();
+			this.cardPriceElement.textContent = `${price} синапсов`;
 		}
 		else {
 			this.cardPriceElement.textContent = 'Бесценно';

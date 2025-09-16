@@ -8,7 +8,7 @@ export type ApiPostMethods = 'POST' | 'GET';
 
 // Типы данных карточки, которые передаются в render
 export type CardBaseProps  = { title: string; price: number | null };
-export type CardMediaProps = { category?: string; image?: string; index?: number; };
+export type CardMediaProps = { category?: string; image?: string; index?: number; buttonDisable?: boolean};
 export type CardsArrayProps ={ items: ICard[]};
 export type CardProps = CardBaseProps & CardMediaProps;
 
@@ -92,10 +92,7 @@ export interface IBasketView {
 
 // Родительский интерфейс формы
 export interface IBaseFormView {
-	onInputChange (): void;
-	set errors (text: string);
-	isValid (data: IUser): boolean;
-	getInputsValue (): Record<string, string>;
+	resetForm(): void;
 }
 
 // Интерфейс окна с подтверждением оформления заказа

@@ -39,6 +39,12 @@ export class ContactsFormView extends BaseFormView implements IContactsFormView 
 			events.emit(AppEvents.FormContactsInputPhone, { phone: this.emailInputElement.value });
 			console.log('Ввод в поле email');
 		})
+
+		// Слушатель сабмита формы
+		this.container.addEventListener('submit', (event) => {
+			event.preventDefault();
+			events.emit(AppEvents.FormContactsSubmit);
+		})
 	}
 
 	set email (email: string) {

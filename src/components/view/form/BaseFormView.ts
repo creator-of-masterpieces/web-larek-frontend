@@ -5,6 +5,7 @@ import { IEvents } from '../../core/EventEmitter';
 interface BaseFormProps {
 	error?: string;
 	submitButtonDisable: boolean;
+	enableSubmit: boolean;
 }
 
 export class BaseFormView extends Component<BaseFormProps> implements IBaseFormView {
@@ -21,19 +22,7 @@ export class BaseFormView extends Component<BaseFormProps> implements IBaseFormV
 		this.submitButton = container.querySelector('button[name=form__errors]');
 	}
 
-	onInputChange () {
-		return;
-	}
-
-	set errors (text: string) {
-		return;
-	}
-
-	isValid (data: IUser) {
-		return true;
-	}
-
-	getInputsValue () {
-		return { '':'' };
+	resetForm() {
+		this.container.reset();
 	}
 }

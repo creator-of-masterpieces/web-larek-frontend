@@ -17,6 +17,7 @@ import { BasketView } from './components/view/basket/BasketView';
 import { OrderFormView } from './components/view/form/OrderFormView';
 import { ContactsFormView } from './components/view/form/ContactsFormView';
 import { UserData } from './components/model/UserData';
+import { SuccessOrderMessage } from './components/view/message/SuccessOrderMessage';
 
 // Элемент галереи
 const catalogElement = ensureElement<HTMLElement>('.gallery');
@@ -39,6 +40,10 @@ const headerElement = ensureElement<HTMLElement>('.header');
 // Клонированный элемент корзины
 const basketClonedElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplateElement>('#basket'));
 
+const successMessageElement = cloneTemplate(ensureElement<HTMLTemplateElement>('#success'));
+
+const page = ensureElement('.page__wrapper');
+
 // Прочие классы
 const baseApi: IApi = new Api(API_URL);
 const api = new AppApi(baseApi, CDN_URL);
@@ -54,6 +59,7 @@ const catalogView = new CatalogView(catalogElement, events);
 const modalView = new ModalView(modalElement, events);
 const headerView = new HeaderView(headerElement, events);
 const basketView = new BasketView(basketClonedElement, events);
+const succesMessageView = new SuccessOrderMessage(successMessageElement, events);
 
 // Клонирую темплейт формы оплаты. Передаю его в класс формы
 const orderFormElement = cloneTemplate<HTMLFormElement>(ensureElement<HTMLTemplateElement>('#order')) ;
@@ -106,6 +112,10 @@ events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
 		previewCardView.buttonBuyText();
 	}
 
+	if(catalogData.getCard(id.cardId).price === null) {
+		previewCardView.render({buttonDisable: true});
+	}
+
 	// добавляю карточку в модальное окно и открываю окно
 	modalView.content = previewCardFilled;
 	modalView.openModal();
@@ -131,7 +141,6 @@ events.on(AppEvents.BasketChanged, () => {
 
 		// Передаю в рендер вью карточки данные карточки
 		return cardInBasketView.render(card);
-
 	})
 	// Записываю получившийся массив заполненных html карточек в вью корзины
 	basketView.content = cards;
@@ -181,13 +190,11 @@ events.on(AppEvents.BasketDelete, ({id}: {id: string})=> {
 	basketData.removeCard(id);
 })
 
-//
-
 // Слушатель сабмита корзины. Открывает форму оплаты.
 events.on(AppEvents.BasketOrder, () => {
 
 	// Отрисовываю форму в модальном окне
-	modalView.render({ content: orderFormView.render() });
+	modalView.render({ content: orderFormView.render({enableSubmit: false}) });
 })
 
 // Слушатель нажатия кнопки оплаты наличными
@@ -237,6 +244,43 @@ events.on<{phone: string}>(AppEvents.FormContactsInputPhone, (phone)=> {
 	userData.setPhone(phone.phone);
 	contactsFormView.render({submitButtonDisable: userData.isContactsDataValid()})
 })
+
+// Слушатель сабмита формы контактов
+events.on(AppEvents.FormContactsSubmit, ()=> {
+	const userOrderData = userData.getUserData();
+	const totalPrice = basketData.getTotalPrice();
+	const basketItemsIds = basketData.getCards().map((item)=> {
+		return item.id;
+	})
+	const fullOrderData = {
+		...userOrderData,
+		total: totalPrice,
+		items: basketItemsIds
+	}
+	api.sendOrderData(fullOrderData)
+		.then((res) => {
+			basketData.cleanBasket();
+			userData.clearData();
+			contactsFormView.resetForm();
+			orderFormView.resetForm();
+			orderFormView.clearButtonState();
+			modalView.render({content: succesMessageView.render({totalPrice: res.total})});
+	});
+})
+
+// Слушатель сабмита сообщения об успешном заказе
+events.on(AppEvents.OrderSuccessMessageSuccessConfirm, ()=> {
+	modalView.closeModal();
+})
+
+events.on(AppEvents.ModalOpen, () => {
+	page.classList.add('page__wrapper_locked');
+})
+
+events.on(AppEvents.ModalClose, ()=> {
+	page.classList.remove('page__wrapper_locked');
+})
+
 
 
 

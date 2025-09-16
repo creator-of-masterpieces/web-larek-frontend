@@ -59,4 +59,9 @@ export class BasketData implements IBasketData {
 			return true;
 		}
 }
+
+	cleanBasket() {
+			this.cardsInBasket = [];
+			this.events.emit(AppEvents.BasketChanged);
+}
 }

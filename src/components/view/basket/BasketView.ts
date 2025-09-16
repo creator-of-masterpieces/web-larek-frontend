@@ -26,7 +26,7 @@ export class BasketView extends Component<BasketProps> {
 	}
 
 	set totalPrice(totalPrice: number) {
-		this.totalPriceCounter.textContent = totalPrice.toString();
+		this.totalPriceCounter.textContent = `${totalPrice} синапсов`;
 	}
 
 	set content(cards:HTMLElement[]) {

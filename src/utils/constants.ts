@@ -29,3 +29,11 @@ export enum AppEvents {
 	FormContactsSubmit = 'formContacts:submit',
 	OrderSuccessMessageSuccessConfirm = 'orderSuccessMessage:successConfirm'
 }
+
+export const categoryClasses: Record<string, string> = {
+	'другое' : 'card__category_other',
+	'софт-скил': 'card__category_soft',
+	'дополнительное' : 'card__category_additional',
+	'кнопка' : 'card__category_button',
+	'хард-скил': 'card__category_hard',
+};
