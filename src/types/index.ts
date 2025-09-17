@@ -73,6 +73,7 @@ export interface ICardFullView extends ICardBaseView {
 // Интерфейс каталога карточек на главной странице
 export interface ICatalogView {
 	set content (cards: HTMLElement[]);
+	set locked(isOpen: boolean);
 }
 
 // Интерфейс модального окна

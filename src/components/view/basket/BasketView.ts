@@ -10,9 +10,7 @@ export class BasketView extends Component<BasketProps> {
 	protected submitButtonElement: HTMLButtonElement;
 	protected totalPriceCounter: HTMLElement;
 	protected basketContent: HTMLElement;
-	protected cards: ICard[];
-
-
+	
 	constructor(container: HTMLElement, events: IEvents) {
 		super(container);
 		this.events = events;

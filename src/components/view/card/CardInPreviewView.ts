@@ -27,11 +27,11 @@ export class CardInPreviewView extends CardFullView implements ICardPreviewView 
 		this.cardDescriptionElement.textContent = text;
 	}
 
-	buttonDeleteText() {
+	setButtonDeleteText() {
 		this.buyButton.textContent = 'Удалить из корзины';
 	}
 
-	buttonBuyText() {
+	setButtonBuyText() {
 		this.buyButton.textContent = 'Купить';
 	}
 

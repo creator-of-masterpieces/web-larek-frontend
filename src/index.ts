@@ -42,7 +42,6 @@ const basketClonedElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplat
 
 const successMessageElement = cloneTemplate(ensureElement<HTMLTemplateElement>('#success'));
 
-const page = ensureElement('.page__wrapper');
 
 // Прочие классы
 const baseApi: IApi = new Api(API_URL);
@@ -106,10 +105,10 @@ events.on<{cardId: string}>(AppEvents.ProductOpen, (id) => {
 
 	// Устанавливаю текст кнопки купить/удалить
 	if(basketData.isInBasket(id.cardId)) {
-		previewCardView.buttonDeleteText();
+		previewCardView.setButtonDeleteText();
 	}
 	else {
-		previewCardView.buttonBuyText();
+		previewCardView.setButtonBuyText();
 	}
 
 	if(catalogData.getCard(id.cardId).price === null) {
@@ -137,7 +136,8 @@ events.on(AppEvents.BasketChanged, () => {
 		const cardInBasketFilled = cardInBasketView.render(card);
 
 		// Задаю порядковый номер карточки в корзине
-		cardInBasketFilled.querySelector('.basket__item-index').textContent = String(index + 1);
+		cardInBasketView.render({index: index});
+		// cardInBasketFilled.querySelector('.basket__item-index').textContent = String(index + 1);
 
 		// Передаю в рендер вью карточки данные карточки
 		return cardInBasketView.render(card);
@@ -274,11 +274,11 @@ events.on(AppEvents.OrderSuccessMessageSuccessConfirm, ()=> {
 })
 
 events.on(AppEvents.ModalOpen, () => {
-	page.classList.add('page__wrapper_locked');
+	catalogView.render({locked: true});
 })
 
 events.on(AppEvents.ModalClose, ()=> {
-	page.classList.remove('page__wrapper_locked');
+	catalogView.render({locked: false});
 })
 
 
